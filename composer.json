@@ -1,0 +1,28 @@
+{
+  "name": "drd-plus/stamina",
+  "license": "MIT",
+  "type": "project",
+  "description": "Remaining stamina of a body according to its endurance and fatigue for Drd+",
+  "autoload": {
+    "psr-4": {
+      "DrdPlus\\": "DrdPlus/"
+    }
+  },
+  "require": {
+    "php": ">=5.5.0",
+    "doctrineum/integer": "dev-master",
+    "doctrineum/string": "dev-master",
+    "doctrineum/date-interval": "dev-master",
+    "drd-plus/properties": "dev-master",
+    "drd-plus/tables": "dev-master",
+    "drd-plus/rolls-on": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.4",
+    "mockery/mockery": "dev-master",
+    "doctrine/orm": "2.*",
+    "doctrineum/entity": "dev-master"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
