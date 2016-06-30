@@ -5,6 +5,7 @@ use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
 use Drd\DiceRoll\Templates\Rollers\SpecificRolls\Roll2d6DrdPlus;
 use DrdPlus\Properties\Derived\FatigueBoundary;
 use DrdPlus\Stamina\GridOfFatigue;
+use DrdPlus\Stamina\MalusFromFatigue;
 use DrdPlus\Stamina\RestPower;
 use DrdPlus\Stamina\Stamina;
 use DrdPlus\Stamina\ReasonToRollAgainstFatigueMalus;
@@ -26,6 +27,7 @@ class StaminaTest extends TestWithMockery
         self::assertSame(123, $stamina->getFatigueBoundaryValue());
         self::assertSame(369, $stamina->getRemainingStaminaAmount());
         self::assertSame(369, $stamina->getStaminaMaximum());
+        self::assertInstanceOf(MalusFromFatigue::class, $stamina->getMalusFromFatigue());
     }
 
     /**
@@ -195,7 +197,7 @@ class StaminaTest extends TestWithMockery
         $stamina->addFatigue($this->createFatigueSize(4));
         $stamina->rollAgainstMalusFromFatigue($this->createWill(-1), $this->createRoller2d6Plus(3)); // -3 malus as a result
         self::assertFalse($stamina->needsToRollAgainstMalus());
-        $stamina->rest($this->createRestingPower(1));
+        $stamina->rest($this->createRestPower(1));
         self::assertSame(ReasonToRollAgainstFatigueMalus::getRestReason(), $stamina->getReasonToRollAgainstFatigueMalus());
         self::assertSame(
             $expectedMalus,
@@ -262,7 +264,7 @@ class StaminaTest extends TestWithMockery
         } catch (\Exception $exception) {
             self::fail('No exception expected so far: ' . $exception->getTraceAsString());
         }
-        $stamina->rest($this->createRestingPower(5));
+        $stamina->rest($this->createRestPower(5));
     }
 
     /**
@@ -312,7 +314,7 @@ class StaminaTest extends TestWithMockery
                 "For will $currentWillValue and roll $currentRollValue has been expected malus $currentlyExpectedMalus"
             );
             self::assertSame($currentlyExpectedMalus, $stamina->getMalusFromFatigue()->getValue());
-            $stamina->rest($this->createRestingPower(3)); // "resetting" currently given fatigue
+            $stamina->rest($this->createRestPower(3)); // "resetting" currently given fatigue
             // low values to ensure untouched malus (should not be increased, therefore changed here at all, on rest)
             $stamina->rollAgainstMalusFromFatigue($this->createWill(-1), $this->createRoller2d6Plus(-1));
         }
@@ -362,7 +364,7 @@ class StaminaTest extends TestWithMockery
                 "Even for will $currentWillValue and roll $currentRollValue has been expected previous malus $expectedMalus"
             );
             self::assertSame($expectedMalus, $stamina->getMalusFromFatigue()->getValue());
-            $stamina->rest($this->createRestingPower(3)); // "resetting" currently given fatigue
+            $stamina->rest($this->createRestPower(3)); // "resetting" currently given fatigue
             // low values to ensure untouched malus (should not be increased, therefore changed here at all, on rest)
             $stamina->rollAgainstMalusFromFatigue($this->createWill(-1), $this->createRoller2d6Plus(-1));
         }
@@ -382,7 +384,7 @@ class StaminaTest extends TestWithMockery
         $stamina->addFatigue($this->createFatigueSize(2));
         $stamina->rollAgainstMalusFromFatigue($this->createWill(0), $this->createRoller2d6Plus(11));
         self::assertSame(-1, $stamina->getMalusFromFatigue()->getValue());
-        self::assertSame(1, $stamina->rest($this->createRestingPower(1)));
+        self::assertSame(1, $stamina->rest($this->createRestPower(1)));
         $stamina->rollAgainstMalusFromFatigue($this->createWill(0), $this->createRoller2d6Plus(-2)); // much worse roll
         self::assertSame(-1, $stamina->getMalusFromFatigue()->getValue(), 'Malus should not be increased');
     }
@@ -432,16 +434,31 @@ class StaminaTest extends TestWithMockery
         self::assertFalse($stamina->needsToRollAgainstMalus());
         self::assertNull($stamina->getReasonToRollAgainstFatigueMalus());
 
-        self::assertSame(1, $stamina->rest($this->createRestingPower(10)));
+        self::assertSame(1, $stamina->rest($this->createRestPower(10)));
         self::assertSame(21, $stamina->getRemainingStaminaAmount());
         self::assertSame(0, $stamina->getFatigue());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_rest_so_little_so_nothing_changes()
+    {
+        $stamina = $this->createStaminaToTest(4);
+
+        $stamina->addFatigue($this->createFatigueSize(7));
+        $stamina->rollAgainstMalusFromFatigue($this->createWill(-2), $this->createRoller2d6Plus(5));
+        self::assertSame(-3, $stamina->getMalusFromFatigue()->getValue());
+
+        self::assertSame(0, $stamina->rest($this->createRestPower(0)));
+        self::assertSame(-3, $stamina->getMalusFromFatigue()->getValue());
     }
 
     /**
      * @param $restUpTo
      * @return \Mockery\MockInterface|RestPower
      */
-    private function createRestingPower($restUpTo = null)
+    private function createRestPower($restUpTo = null)
     {
         $restingPower = $this->mockery(RestPower::class);
         if ($restUpTo !== null) {
@@ -450,6 +467,35 @@ class StaminaTest extends TestWithMockery
         }
 
         return $restingPower;
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_malus_on_decreased_stamina()
+    {
+        $stamina = $this->createStaminaToTest(5);
+        $stamina->addFatigue($this->createFatigueSize(4));
+        self::assertSame(0, $stamina->getMalusFromFatigue()->getValue());
+
+        $stamina->changeFatigueBoundary($this->createFatigueBoundary(4));
+        self::assertSame(4, $stamina->getFatigueBoundaryValue());
+        self::assertSame(ReasonToRollAgainstFatigueMalus::FATIGUE, $stamina->getReasonToRollAgainstFatigueMalus()->getValue());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_be_cleaned_from_malus_on_increased_stamina()
+    {
+        $stamina = $this->createStaminaToTest(5);
+        $stamina->addFatigue($this->createFatigueSize(5));
+        $stamina->rollAgainstMalusFromFatigue($this->createWill(3), $this->createRoller2d6Plus(6));
+        self::assertSame(-2, $stamina->getMalusFromFatigue()->getValue());
+
+        $stamina->changeFatigueBoundary($this->createFatigueBoundary(6));
+        self::assertSame(6, $stamina->getFatigueBoundaryValue());
+        self::assertSame(0, $stamina->getMalusFromFatigue()->getValue());
     }
 
     /**
