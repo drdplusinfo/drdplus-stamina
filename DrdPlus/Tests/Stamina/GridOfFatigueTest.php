@@ -1,6 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Stamina;
 
+use DrdPlus\Stamina\Fatigue;
 use DrdPlus\Stamina\GridOfFatigue;
 use DrdPlus\Stamina\Stamina;
 use Granam\Tests\Tools\TestWithMockery;
@@ -26,6 +27,8 @@ class GridOfFatigueTest extends TestWithMockery
     {
         $stamina = $this->mockery(Stamina::class);
         $stamina->shouldReceive('getFatigue')
+            ->andReturn($fatigue = $this->mockery(Fatigue::class));
+        $fatigue->shouldReceive('getValue')
             ->andReturn($unrestedFatigue);
         if ($fatigueBoundaryValue !== false) {
             $stamina->shouldReceive('getFatigueBoundaryValue')

@@ -12,5 +12,6 @@ class StaminaEnumsRegistrar
         // Stamina
         MalusFromFatigueType::registerSelf();
         ReasonToRollAgainstFatigueMalusType::registerSelf();
+        FatigueType::registerSelf();
     }
 }

@@ -62,7 +62,7 @@ class GridOfFatigue extends StrictObject
      */
     public function getNumberOfFilledRows()
     {
-        $numberOfFilledRows = SumAndRound::floor($this->stamina->getFatigue() / $this->getFatiguePerRowMaximum());
+        $numberOfFilledRows = SumAndRound::floor($this->stamina->getFatigue()->getValue() / $this->getFatiguePerRowMaximum());
 
         return $numberOfFilledRows < self::TOTAL_NUMBER_OF_ROWS
             ? $numberOfFilledRows

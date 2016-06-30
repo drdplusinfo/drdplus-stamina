@@ -22,8 +22,8 @@ class Stamina extends StrictObject implements Entity
      */
     private $id;
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var Fatigue
+     * @ORM\Column(type="fatigue")
      */
     private $fatigue;
     /**
@@ -48,21 +48,21 @@ class Stamina extends StrictObject implements Entity
 
     public function __construct(FatigueBoundary $fatigueBoundary)
     {
-        $this->fatigue = 0;
+        $this->fatigue = Fatigue::getIt(0);
         $this->fatigueBoundaryValue = $fatigueBoundary->getValue();
         $this->malusFromFatigue = MalusFromFatigue::getIt(0);
     }
 
     /**
-     * @param FatigueSize $fatigueSize
-     * @return int
+     * @param Fatigue $fatigue
+     * @return Fatigue final fatigue
      * @throws \DrdPlus\Stamina\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function addFatigue(FatigueSize $fatigueSize)
+    public function addFatigue(Fatigue $fatigue)
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
-        $this->fatigue += $fatigueSize->getValue();
-        $this->resolveMalusAfterFatigue($this->fatigue);
+        $this->fatigue = Fatigue::getIt($this->fatigue->getValue() + $fatigue->getValue());
+        $this->resolveMalusAfterFatigue($this->fatigue->getValue());
 
         return $this->fatigue;
     }
@@ -118,9 +118,9 @@ class Stamina extends StrictObject implements Entity
     public function rest(RestPower $restPower)
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
-        $previousFatigue = $this->fatigue;
-        $this->fatigue = max(0, $this->fatigue - $restPower->getRestUpTo());
-        $restedAmount = $previousFatigue - $this->fatigue;
+        $previousFatigue = $this->fatigue->getValue();
+        $this->fatigue = Fatigue::getIt(max(0, $this->fatigue->getValue() - $restPower->getRestUpTo()));
+        $restedAmount = $previousFatigue - $this->fatigue->getValue();
         $this->resolveMalusAfterRest($restedAmount);
 
         return $restedAmount;
@@ -143,7 +143,7 @@ class Stamina extends StrictObject implements Entity
     }
 
     /**
-     * @return int
+     * @return Fatigue
      */
     public function getFatigue()
     {
@@ -163,7 +163,7 @@ class Stamina extends StrictObject implements Entity
      */
     public function getRemainingStaminaAmount()
     {
-        return max(0, $this->getStaminaMaximum() - $this->getFatigue());
+        return max(0, $this->getStaminaMaximum() - $this->getFatigue()->getValue());
     }
 
     /**
