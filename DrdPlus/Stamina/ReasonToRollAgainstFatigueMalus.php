@@ -5,6 +5,9 @@ use Doctrineum\String\StringEnum;
 use Granam\Scalar\ScalarInterface;
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static ReasonToRollAgainstFatigueMalus getEnum($value)
+ */
 class ReasonToRollAgainstFatigueMalus extends StringEnum
 {
     const FATIGUE = 'fatigue';

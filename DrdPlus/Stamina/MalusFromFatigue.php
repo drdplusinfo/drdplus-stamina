@@ -4,6 +4,9 @@ namespace DrdPlus\Stamina;
 use Doctrineum\Integer\IntegerEnum;
 use Granam\Tools\ValueDescriber;
 
+/**
+ * @method static MalusFromFatigue getEnum($malusValue)
+ */
 class MalusFromFatigue extends IntegerEnum
 {
     /**
