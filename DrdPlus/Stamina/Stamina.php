@@ -265,7 +265,10 @@ class Stamina extends StrictObject implements Entity
     public function rollAgainstMalusFromFatigue(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus)
     {
         if (!$this->needsToRollAgainstMalus()) {
-            throw new Exceptions\UselessRollAgainstMalus('There is no need to roll against malus from fatigue');
+            throw new Exceptions\UselessRollAgainstMalus(
+                'There is no need to roll against malus from fatigue'
+                . ($this->isConscious() ? '' : ' (being is unconscious)')
+            );
         }
         $malusFromFatigue = $this->reasonToRollAgainstFatigueMalus->becauseOfRest()
             ? $this->rollAgainstMalusOnRest($will, $roller2d6DrdPlus)
