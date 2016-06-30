@@ -27,7 +27,10 @@ class StaminaTest extends TestWithMockery
         self::assertSame(123, $stamina->getFatigueBoundaryValue());
         self::assertSame(369, $stamina->getRemainingStaminaAmount());
         self::assertSame(369, $stamina->getStaminaMaximum());
-        self::assertInstanceOf(MalusFromFatigue::class, $stamina->getMalusFromFatigue());
+        self::assertInstanceOf(Fatigue::class, $fatigue = $stamina->getFatigue());
+        self::assertSame(0, $fatigue->getValue());
+        self::assertInstanceOf(MalusFromFatigue::class, $malusFromFatigue = $stamina->getMalusFromFatigue());
+        self::assertSame(0, $malusFromFatigue->getValue());
     }
 
     /**
@@ -507,5 +510,18 @@ class StaminaTest extends TestWithMockery
         $stamina->changeFatigueBoundary($fatigueBoundary = $this->createFatigueBoundary(123));
         self::assertSame(123, $stamina->getFatigueBoundaryValue());
         $this->assertRested($stamina, $fatigueBoundary);
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_be_exhausted_out_of_imagination()
+    {
+        $stamina = $this->createStaminaToTest(5);
+        $stamina->addFatigue($this->createFatigue(50));
+        self::assertSame(50, $stamina->getFatigue()->getValue());
+        self::assertFalse($stamina->isConscious());
+        self::assertFalse($stamina->isAlive());
+        self::assertSame(0, $stamina->getRemainingStaminaAmount());
     }
 }
