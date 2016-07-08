@@ -11,12 +11,12 @@ class FatigueTest extends \PHPUnit_Framework_TestCase
      */
     public function I_can_use_it_as_an_integer()
     {
-        $woundSize = new Fatigue(123);
-        self::assertInstanceOf(IntegerInterface::class, $woundSize);
-        self::assertSame(123, $woundSize->getValue());
-        $woundSizeByFactory = Fatigue::getIt(123);
-        self::assertEquals($woundSize, $woundSizeByFactory);
-        self::assertNotSame($woundSize, $woundSizeByFactory);
+        $fatigue = new Fatigue(123);
+        self::assertInstanceOf(IntegerInterface::class, $fatigue);
+        self::assertSame(123, $fatigue->getValue());
+        $fatigueSizeByFactory = Fatigue::getIt(123);
+        self::assertEquals($fatigue, $fatigueSizeByFactory);
+        self::assertNotSame($fatigue, $fatigueSizeByFactory);
     }
 
     /**

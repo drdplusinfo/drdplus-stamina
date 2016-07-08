@@ -10,14 +10,14 @@ use Granam\Tools\ValueDescriber;
 class Fatigue extends IntegerEnum
 {
     /**
-     * @param $value
+     * @param int $pointsOfFatigue
      * @return Fatigue
      * @throws \DrdPlus\Stamina\Exceptions\FatigueCanNotBeNegative
      * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
-    public static function getIt($value)
+    public static function getIt($pointsOfFatigue)
     {
-        return static::getEnum($value);
+        return static::getEnum($pointsOfFatigue);
     }
 
     /**

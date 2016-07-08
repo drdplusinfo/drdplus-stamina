@@ -3,10 +3,13 @@ namespace DrdPlus\Stamina;
 
 use Doctrineum\Entity\Entity;
 use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
+use DrdPlus\Properties\Derived\Endurance;
 use DrdPlus\Properties\Derived\FatigueBoundary;
 use DrdPlus\Properties\Base\Will;
 use DrdPlus\RollsOn\Traps\RollOnWillAgainstMalus;
 use DrdPlus\RollsOn\Traps\RollOnWill;
+use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
+use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use Granam\Strict\Object\StrictObject;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -113,16 +116,21 @@ class Stamina extends StrictObject implements Entity
 
     /**
      * @param RestPower $restPower
+     * @param Endurance $endurance
+     * @param WoundsTable $woundsTable
      * @param FatigueBoundary $fatigueBoundary
      * @return int amount of actually rested points of fatigue
      * @throws \DrdPlus\Stamina\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    public function rest(RestPower $restPower, FatigueBoundary $fatigueBoundary)
+    public function rest(RestPower $restPower, FatigueBoundary $fatigueBoundary, Endurance $endurance, WoundsTable $woundsTable)
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
         $previousFatigue = $this->fatigue->getValue();
+        $restUpTo = $woundsTable->toWounds(
+            new WoundsBonus($restPower->getValue() + $endurance->getValue(), $woundsTable)
+        )->getValue();
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $this->fatigue = Fatigue::getIt(max(0, $this->fatigue->getValue() - $restPower->getRestUpTo()));
+        $this->fatigue = Fatigue::getIt(max(0, $this->fatigue->getValue() - $restUpTo));
         $restedAmount = $previousFatigue - $this->fatigue->getValue();
         $this->resolveMalusAfterRest($restedAmount, $fatigueBoundary);
 

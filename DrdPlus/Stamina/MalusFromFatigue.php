@@ -2,6 +2,7 @@
 namespace DrdPlus\Stamina;
 
 use Doctrineum\Integer\IntegerEnum;
+use DrdPlus\Tools\Calculations\SumAndRound;
 use Granam\Tools\ValueDescriber;
 
 /**
@@ -40,6 +41,19 @@ class MalusFromFatigue extends IntegerEnum
         }
 
         return $finalValue;
+    }
+
+    /**
+     * @param PropertyBasedActivity $activity
+     * @return int
+     */
+    public function getValueForActivity(PropertyBasedActivity $activity)
+    {
+        if ($activity->usesStrength() || $activity->usesAgility() || $activity->usesKnack()) {
+            return $this->getValue();
+        }
+
+        return SumAndRound::half($this->getValue());
     }
 
 }
