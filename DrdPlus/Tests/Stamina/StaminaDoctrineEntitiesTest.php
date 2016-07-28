@@ -12,7 +12,7 @@ use DrdPlus\Properties\Base\Strength;
 use DrdPlus\Tables\Measurements\Fatigue\FatigueTable;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 
-class StaminaEntitiesTest extends AbstractDoctrineEntitiesTest
+class StaminaDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
 {
     protected function setUp()
     {
