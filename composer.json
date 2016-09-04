@@ -10,6 +10,8 @@
   },
   "require": {
     "php": ">=5.5.0",
+    "doctrine/orm": "2.*",
+    "doctrineum/entity": "dev-master",
     "doctrineum/integer": "dev-master",
     "doctrineum/string": "dev-master",
     "doctrineum/date-interval": "dev-master",
@@ -18,10 +20,8 @@
     "drd-plus/rolls-on": "dev-master"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.4",
-    "mockery/mockery": "dev-master",
-    "doctrine/orm": "2.*",
-    "doctrineum/entity": "dev-master"
+    "phpunit/phpunit": ">=4.4",
+    "mockery/mockery": "dev-master"
   },
   "minimum-stability": "dev",
   "prefer-stable": true
