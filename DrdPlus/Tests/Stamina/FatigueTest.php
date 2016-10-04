@@ -11,12 +11,9 @@ class FatigueTest extends \PHPUnit_Framework_TestCase
      */
     public function I_can_use_it_as_an_integer()
     {
-        $fatigue = new Fatigue(123);
+        $fatigue = Fatigue::getIt(123);
         self::assertInstanceOf(IntegerInterface::class, $fatigue);
         self::assertSame(123, $fatigue->getValue());
-        $fatigueSizeByFactory = Fatigue::getIt(123);
-        self::assertEquals($fatigue, $fatigueSizeByFactory);
-        self::assertNotSame($fatigue, $fatigueSizeByFactory);
     }
 
     /**
@@ -26,7 +23,7 @@ class FatigueTest extends \PHPUnit_Framework_TestCase
      */
     public function I_am_stopped_by_specific_exception_on_invalid_value()
     {
-        new Fatigue('Drastic teaching');
+        Fatigue::getIt('Drastic teaching');
     }
 
     /**
@@ -36,6 +33,6 @@ class FatigueTest extends \PHPUnit_Framework_TestCase
      */
     public function I_can_not_use_negative_value()
     {
-        new Fatigue(-1);
+        Fatigue::getEnum(-1);
     }
 }
