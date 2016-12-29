@@ -2,7 +2,7 @@
 namespace DrdPlus\Stamina;
 
 use Doctrineum\Integer\IntegerEnum;
-use DrdPlus\Tools\Calculations\SumAndRound;
+use DrdPlus\Calculations\SumAndRound;
 use Granam\Tools\ValueDescriber;
 
 /**

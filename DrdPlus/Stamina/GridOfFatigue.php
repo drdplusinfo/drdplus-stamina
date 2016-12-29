@@ -2,7 +2,7 @@
 namespace DrdPlus\Stamina;
 
 use DrdPlus\Properties\Derived\FatigueBoundary;
-use DrdPlus\Tools\Calculations\SumAndRound;
+use DrdPlus\Calculations\SumAndRound;
 use Granam\Strict\Object\StrictObject;
 
 class GridOfFatigue extends StrictObject
