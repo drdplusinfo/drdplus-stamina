@@ -2,7 +2,7 @@
 namespace DrdPlus\Tests\Stamina;
 
 use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
-use Drd\DiceRoll\Templates\Rollers\SpecificRolls\Roll2d6DrdPlus;
+use Drd\DiceRoll\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Properties\Derived\Endurance;
 use DrdPlus\Properties\Derived\FatigueBoundary;
 use DrdPlus\Stamina\Fatigue;
