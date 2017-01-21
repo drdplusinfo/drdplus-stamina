@@ -9,8 +9,7 @@ use DrdPlus\Stamina\EnumTypes\StaminaEnumsRegistrar;
 use DrdPlus\Stamina\Fatigue;
 use DrdPlus\Stamina\Stamina;
 use DrdPlus\Properties\Base\Strength;
-use DrdPlus\Tables\Measurements\Fatigue\FatigueTable;
-use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
+use DrdPlus\Tables\Tables;
 
 class StaminaDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
 {
@@ -23,17 +22,14 @@ class StaminaDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
     protected function getDirsWithEntities()
     {
         return [
-            str_replace(DIRECTORY_SEPARATOR . 'Tests', '', __DIR__)
+            str_replace(DIRECTORY_SEPARATOR . 'Tests', '', __DIR__),
         ];
     }
 
     protected function createEntitiesToPersist()
     {
         $stamina = new Stamina(
-            $fatigueBoundary = new FatigueBoundary(
-                new Endurance(Strength::getIt(2), Will::getIt(3)),
-                new FatigueTable(new WoundsTable())
-            )
+            $fatigueBoundary = new FatigueBoundary(new Endurance(Strength::getIt(2), Will::getIt(3)), Tables::getIt())
         );
         $stamina->addFatigue(Fatigue::getIt(7), $fatigueBoundary);
 
