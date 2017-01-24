@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Stamina;
 
-use DrdPlus\Codes\PropertyCode;
+use DrdPlus\Codes\Properties\PropertyCode;
 use DrdPlus\Stamina\PropertyBasedActivity;
 use DrdPlus\Stamina\MalusFromFatigue;
 use Granam\Tests\Tools\TestWithMockery;

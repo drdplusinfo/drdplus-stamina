@@ -17,6 +17,9 @@ class GridOfFatigue extends StrictObject
      */
     private $stamina;
 
+    /**
+     * @param Stamina $stamina
+     */
     public function __construct(Stamina $stamina)
     {
         $this->stamina = $stamina;
