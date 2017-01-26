@@ -29,7 +29,9 @@ class StaminaDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
     protected function createEntitiesToPersist()
     {
         $stamina = new Stamina(
-            $fatigueBoundary = new FatigueBoundary(new Endurance(Strength::getIt(2), Will::getIt(3)), Tables::getIt())
+            $fatigueBoundary = FatigueBoundary::getIt(
+                Endurance::getIt(Strength::getIt(2), Will::getIt(3)), Tables::getIt()
+            )
         );
         $stamina->addFatigue(Fatigue::getIt(7), $fatigueBoundary);
 
