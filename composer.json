@@ -10,6 +10,7 @@
   },
   "require": {
     "php": ">=5.5.0",
+    "roave/security-advisories": "dev-master",
     "doctrine/orm": "2.*",
     "doctrineum/entity": "dev-master",
     "doctrineum/integer": "dev-master",

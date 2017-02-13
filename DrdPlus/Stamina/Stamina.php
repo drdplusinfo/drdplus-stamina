@@ -2,7 +2,7 @@
 namespace DrdPlus\Stamina;
 
 use Doctrineum\Entity\Entity;
-use Drd\DiceRoll\Templates\Rollers\Roller2d6DrdPlus;
+use Drd\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
 use DrdPlus\Properties\Derived\Endurance;
 use DrdPlus\Properties\Derived\FatigueBoundary;
 use DrdPlus\Properties\Base\Will;
