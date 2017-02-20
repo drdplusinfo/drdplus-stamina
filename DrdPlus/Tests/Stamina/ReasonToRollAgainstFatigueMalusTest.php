@@ -2,8 +2,9 @@
 namespace DrdPlus\Tests\Stamina;
 
 use DrdPlus\Stamina\ReasonToRollAgainstFatigueMalus;
+use PHPUnit\Framework\TestCase;
 
-class ReasonToRollAgainstFatigueMalusTest extends \PHPUnit_Framework_TestCase
+class ReasonToRollAgainstFatigueMalusTest extends TestCase
 {
     /**
      * @test

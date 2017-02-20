@@ -3,8 +3,9 @@ namespace DrdPlus\Tests\Stamina;
 
 use DrdPlus\Stamina\Fatigue;
 use Granam\Integer\IntegerInterface;
+use PHPUnit\Framework\TestCase;
 
-class FatigueTest extends \PHPUnit_Framework_TestCase
+class FatigueTest extends TestCase
 {
     /**
      * @test

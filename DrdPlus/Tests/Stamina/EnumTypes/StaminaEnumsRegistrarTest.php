@@ -5,8 +5,9 @@ use Doctrine\DBAL\Types\Type;
 use Doctrineum\DateInterval\DBAL\Types\DateIntervalType;
 use DrdPlus\Stamina\EnumTypes\StaminaEnumsRegistrar;
 use Granam\String\StringTools;
+use PHPUnit\Framework\TestCase;
 
-class StaminaEnumsRegistrarTest extends \PHPUnit_Framework_TestCase
+class StaminaEnumsRegistrarTest extends TestCase
 {
     /**
      * @test
