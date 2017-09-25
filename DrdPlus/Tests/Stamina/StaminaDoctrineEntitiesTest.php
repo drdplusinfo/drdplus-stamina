@@ -21,19 +21,16 @@ class StaminaDoctrineEntitiesTest extends AbstractDoctrineEntitiesTest
 
     protected function getDirsWithEntities()
     {
-        return [
-            str_replace(DIRECTORY_SEPARATOR . 'Tests', '', __DIR__),
-        ];
+        return [str_replace(DIRECTORY_SEPARATOR . 'Tests', '', __DIR__)];
     }
 
-    protected function createEntitiesToPersist()
+    protected function createEntitiesToPersist(): array
     {
-        $stamina = new Stamina(
-            $fatigueBoundary = FatigueBoundary::getIt(
-                Endurance::getIt(Strength::getIt(2), Will::getIt(3)), Tables::getIt()
-            )
+        $stamina = new Stamina();
+        $stamina->addFatigue(
+            Fatigue::getIt(7),
+            FatigueBoundary::getIt(Endurance::getIt(Strength::getIt(2), Will::getIt(3)), Tables::getIt())
         );
-        $stamina->addFatigue(Fatigue::getIt(7), $fatigueBoundary);
 
         return [$stamina];
     }

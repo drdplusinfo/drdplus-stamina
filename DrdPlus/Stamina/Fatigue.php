@@ -4,18 +4,15 @@ namespace DrdPlus\Stamina;
 use Doctrineum\Integer\IntegerEnum;
 use Granam\Tools\ValueDescriber;
 
-/**
- * @method static Fatigue getEnum($value)
- */
 class Fatigue extends IntegerEnum
 {
     /**
      * @param int $pointsOfFatigue
-     * @return Fatigue
+     * @return Fatigue|IntegerEnum
      * @throws \DrdPlus\Stamina\Exceptions\FatigueCanNotBeNegative
      * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
-    public static function getIt($pointsOfFatigue)
+    public static function getIt($pointsOfFatigue): Fatigue
     {
         return static::getEnum($pointsOfFatigue);
     }
@@ -26,7 +23,7 @@ class Fatigue extends IntegerEnum
      * @throws \DrdPlus\Stamina\Exceptions\FatigueCanNotBeNegative
      * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): int
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
         if ($finalValue < 0) {

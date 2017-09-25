@@ -5,18 +5,15 @@ use Doctrineum\Integer\IntegerEnum;
 use DrdPlus\Calculations\SumAndRound;
 use Granam\Tools\ValueDescriber;
 
-/**
- * @method static MalusFromFatigue getEnum($malusValue)
- */
 class MalusFromFatigue extends IntegerEnum
 {
     /**
      * @param int $malusValue
-     * @return MalusFromFatigue
+     * @return MalusFromFatigue|IntegerEnum
      * @throws \DrdPlus\Stamina\Exceptions\UnexpectedMalusValue
      * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
-    public static function getIt($malusValue)
+    public static function getIt($malusValue): MalusFromFatigue
     {
         return static::getEnum($malusValue);
     }
@@ -29,7 +26,7 @@ class MalusFromFatigue extends IntegerEnum
      * @throws \DrdPlus\Stamina\Exceptions\UnexpectedMalusValue
      * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      */
-    protected static function convertToEnumFinalValue($enumValue)
+    protected static function convertToEnumFinalValue($enumValue): int
     {
         $finalValue = parent::convertToEnumFinalValue($enumValue);
         if ($finalValue > 0 // note: comparing negative numbers
@@ -47,7 +44,7 @@ class MalusFromFatigue extends IntegerEnum
      * @param PropertyBasedActivity $activity
      * @return int
      */
-    public function getValueForActivity(PropertyBasedActivity $activity)
+    public function getValueForActivity(PropertyBasedActivity $activity): int
     {
         if ($activity->usesStrength() || $activity->usesAgility() || $activity->usesKnack()) {
             return $this->getValue();
