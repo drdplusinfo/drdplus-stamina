@@ -1,8 +1,8 @@
 <?php
 namespace DrdPlus\Tests\Stamina;
 
-use Drd\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
-use Drd\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
+use DrdPlus\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
+use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Properties\Derived\Endurance;
 use DrdPlus\Properties\Derived\FatigueBoundary;
 use DrdPlus\Stamina\Fatigue;
