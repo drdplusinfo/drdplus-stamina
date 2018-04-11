@@ -188,7 +188,7 @@ class Stamina extends StrictObject implements Entity
     /**
      * @return int|null
      */
-    public function getId():? int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -247,7 +247,7 @@ class Stamina extends StrictObject implements Entity
     /**
      * @return ReasonToRollAgainstFatigueMalus|null
      */
-    public function getReasonToRollAgainstFatigueMalus():? ReasonToRollAgainstFatigueMalus
+    public function getReasonToRollAgainstFatigueMalus(): ?ReasonToRollAgainstFatigueMalus
     {
         return $this->reasonToRollAgainstFatigueMalus;
     }
