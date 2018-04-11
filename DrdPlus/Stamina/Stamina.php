@@ -45,7 +45,9 @@ class Stamina extends StrictObject implements Entity
 
     public function __construct()
     {
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->fatigue = Fatigue::getIt(0);
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->malusFromFatigue = MalusFromFatigue::getIt(0);
     }
 

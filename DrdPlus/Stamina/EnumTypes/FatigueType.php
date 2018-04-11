@@ -5,12 +5,12 @@ use Doctrineum\Integer\IntegerEnumType;
 
 class FatigueType extends IntegerEnumType
 {
-    const FATIGUE = 'fatigue';
+    public const FATIGUE = 'fatigue';
 
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return self::FATIGUE;
     }

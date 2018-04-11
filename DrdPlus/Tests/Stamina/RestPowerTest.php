@@ -9,7 +9,7 @@ class RestPowerTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_use_it()
+    public function I_can_use_it(): void
     {
         $restingPower = new RestPower(123);
         self::assertSame(123, $restingPower->getValue());

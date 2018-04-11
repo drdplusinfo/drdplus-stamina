@@ -10,7 +10,7 @@ class FatigueTest extends TestCase
     /**
      * @test
      */
-    public function I_can_use_it_as_an_integer()
+    public function I_can_use_it_as_an_integer(): void
     {
         $fatigue = Fatigue::getIt(123);
         self::assertInstanceOf(IntegerInterface::class, $fatigue);
@@ -22,7 +22,7 @@ class FatigueTest extends TestCase
      * @expectedException \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
      * @expectedExceptionMessageRegExp ~Drastic teaching~
      */
-    public function I_am_stopped_by_specific_exception_on_invalid_value()
+    public function I_am_stopped_by_specific_exception_on_invalid_value(): void
     {
         Fatigue::getIt('Drastic teaching');
     }
@@ -32,7 +32,7 @@ class FatigueTest extends TestCase
      * @expectedException \DrdPlus\Stamina\Exceptions\FatigueCanNotBeNegative
      * @expectedExceptionMessageRegExp ~-1~
      */
-    public function I_can_not_use_negative_value()
+    public function I_can_not_use_negative_value(): void
     {
         Fatigue::getEnum(-1);
     }

@@ -5,7 +5,10 @@ use Doctrineum\DateInterval\DBAL\Types\DateIntervalType;
 
 class StaminaEnumsRegistrar
 {
-    public static function registerAll()
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public static function registerAll(): void
     {
         DateIntervalType::registerSelf();
 

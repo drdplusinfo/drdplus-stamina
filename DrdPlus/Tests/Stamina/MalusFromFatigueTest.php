@@ -11,7 +11,7 @@ class MalusFromFatigueTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_use_it()
+    public function I_can_use_it(): void
     {
         $malusFromFatigue = MalusFromFatigue::getIt(-2);
         self::assertInstanceOf(MalusFromFatigue::class, $malusFromFatigue);
@@ -26,7 +26,7 @@ class MalusFromFatigueTest extends TestWithMockery
      * @expectedException \DrdPlus\Stamina\Exceptions\UnexpectedMalusValue
      * @expectedExceptionMessageRegExp ~1~
      */
-    public function I_can_not_create_positive_malus()
+    public function I_can_not_create_positive_malus(): void
     {
         MalusFromFatigue::getIt(1);
     }
@@ -36,7 +36,7 @@ class MalusFromFatigueTest extends TestWithMockery
      * @expectedException \DrdPlus\Stamina\Exceptions\UnexpectedMalusValue
      * @expectedExceptionMessageRegExp ~-4~
      */
-    public function I_can_not_create_worse_malus_than_minus_three()
+    public function I_can_not_create_worse_malus_than_minus_three(): void
     {
         MalusFromFatigue::getIt(-4);
     }
@@ -44,7 +44,7 @@ class MalusFromFatigueTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_get_final_malus_value_according_to_activity()
+    public function I_can_get_final_malus_value_according_to_activity(): void
     {
         $evenMalus = MalusFromFatigue::getIt(-3);
         $oddMalus = MalusFromFatigue::getIt(-2);
@@ -67,26 +67,32 @@ class MalusFromFatigueTest extends TestWithMockery
     {
         $activity = $this->mockery(PropertyBasedActivity::class);
         $activity->shouldReceive('usesStrength')
+            ->zeroOrMoreTimes()
             ->andReturnUsing(function () use ($usedProperty) {
                 return PropertyCode::STRENGTH === $usedProperty;
             });
         $activity->shouldReceive('usesAgility')
+            ->zeroOrMoreTimes()
             ->andReturnUsing(function () use ($usedProperty) {
                 return PropertyCode::AGILITY === $usedProperty;
             });
         $activity->shouldReceive('usesKnack')
+            ->zeroOrMoreTimes()
             ->andReturnUsing(function () use ($usedProperty) {
                 return PropertyCode::KNACK === $usedProperty;
             });
         $activity->shouldReceive('usesWill')
+            ->zeroOrMoreTimes()
             ->andReturnUsing(function () use ($usedProperty) {
                 return PropertyCode::WILL === $usedProperty;
             });
         $activity->shouldReceive('usesIntelligence')
+            ->zeroOrMoreTimes()
             ->andReturnUsing(function () use ($usedProperty) {
                 return PropertyCode::INTELLIGENCE === $usedProperty;
             });
         $activity->shouldReceive('usesCharisma')
+            ->zeroOrMoreTimes()
             ->andReturnUsing(function () use ($usedProperty) {
                 return PropertyCode::CHARISMA === $usedProperty;
             });

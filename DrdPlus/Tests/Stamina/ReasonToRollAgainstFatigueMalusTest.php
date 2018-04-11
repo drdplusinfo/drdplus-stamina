@@ -9,7 +9,7 @@ class ReasonToRollAgainstFatigueMalusTest extends TestCase
     /**
      * @test
      */
-    public function I_can_use_fatigue_reason()
+    public function I_can_use_fatigue_reason(): void
     {
         $fatigueReason = ReasonToRollAgainstFatigueMalus::getFatigueReason();
         self::assertInstanceOf(ReasonToRollAgainstFatigueMalus::class, $fatigueReason);
@@ -20,7 +20,7 @@ class ReasonToRollAgainstFatigueMalusTest extends TestCase
         self::assertSame(ReasonToRollAgainstFatigueMalus::getIt('fatigue'), $fatigueReason);
     }
 
-    public function I_can_use_rest_reason()
+    public function I_can_use_rest_reason(): void
     {
         $restReason = ReasonToRollAgainstFatigueMalus::getRestReason();
         self::assertInstanceOf(ReasonToRollAgainstFatigueMalus::class, $restReason);
@@ -36,7 +36,7 @@ class ReasonToRollAgainstFatigueMalusTest extends TestCase
      * @expectedException \DrdPlus\Stamina\Exceptions\UnknownReasonToRollAgainstMalus
      * @expectedExceptionMessageRegExp ~bored~
      */
-    public function I_can_not_create_unknown_reason()
+    public function I_can_not_create_unknown_reason(): void
     {
         ReasonToRollAgainstFatigueMalus::getEnum('bored');
     }

@@ -13,7 +13,7 @@ class GridOfFatigueTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_get_maximum_of_fatigues_per_row()
+    public function I_can_get_maximum_of_fatigues_per_row(): void
     {
         $fatigueBoundary = $this->createFatigueBoundary(123);
         $gridOfFatigueWithoutFatigueAtAll = new GridOfFatigue($this->createStamina(0 /* no fatigue */));
@@ -24,7 +24,7 @@ class GridOfFatigueTest extends TestWithMockery
      * @param $fatigueBoundaryValue
      * @return \Mockery\MockInterface|FatigueBoundary
      */
-    private function createFatigueBoundary($fatigueBoundaryValue)
+    private function createFatigueBoundary(int $fatigueBoundaryValue): FatigueBoundary
     {
         $fatigueBoundary = $this->mockery(FatigueBoundary::class);
         $fatigueBoundary->shouldReceive('getValue')
@@ -37,7 +37,7 @@ class GridOfFatigueTest extends TestWithMockery
      * @param int $unrestedFatigue
      * @return \Mockery\MockInterface|Stamina
      */
-    private function createStamina($unrestedFatigue)
+    private function createStamina(int $unrestedFatigue): Stamina
     {
         $stamina = $this->mockery(Stamina::class);
         $stamina->shouldReceive('getFatigue')
@@ -51,7 +51,7 @@ class GridOfFatigueTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_get_calculated_filled_half_rows_for_given_fatigue_value()
+    public function I_can_get_calculated_filled_half_rows_for_given_fatigue_value(): void
     {
         // limit of fatigues divisible by two (odd)
         $fatigueBoundary = $this->createFatigueBoundary(124);
@@ -92,8 +92,8 @@ class GridOfFatigueTest extends TestWithMockery
 
         $fatigueBoundary = $this->createFatigueBoundary(5);
 
-        $gridOfFatigue = new GridOfFatigue($this->createStamina(0 /* no fatigue */), '"third" half or row should be rounded up');
-        self::assertSame(2, $gridOfFatigue->calculateFilledHalfRowsFor(7, $fatigueBoundary));
+        $gridOfFatigue = new GridOfFatigue($this->createStamina(0 /* no fatigue */));
+        self::assertSame(2, $gridOfFatigue->calculateFilledHalfRowsFor(7, $fatigueBoundary), '"third" half or row should be rounded up');
 
         $gridOfFatigue = new GridOfFatigue($this->createStamina(0 /* no fatigue */));
         self::assertSame(3, $gridOfFatigue->calculateFilledHalfRowsFor(8, $fatigueBoundary));
@@ -105,7 +105,7 @@ class GridOfFatigueTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_get_number_of_filled_rows()
+    public function I_can_get_number_of_filled_rows(): void
     {
         $fatigueBoundary = $this->createFatigueBoundary(23);
 

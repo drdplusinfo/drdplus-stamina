@@ -6,7 +6,6 @@ use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Properties\Derived\Endurance;
 use DrdPlus\Properties\Derived\FatigueBoundary;
 use DrdPlus\Stamina\Fatigue;
-use DrdPlus\Stamina\GridOfFatigue;
 use DrdPlus\Stamina\MalusFromFatigue;
 use DrdPlus\Stamina\RestPower;
 use DrdPlus\Stamina\Stamina;
@@ -24,7 +23,7 @@ class StaminaTest extends TestWithMockery
     /**
      * @test
      */
-    public function I_can_use_it()
+    public function I_can_use_it(): void
     {
         $fatigueBoundary = $this->createFatigueBoundary(123);
         $stamina = $this->createStaminaToTest($fatigueBoundary);
@@ -41,7 +40,7 @@ class StaminaTest extends TestWithMockery
      * @param FatigueBoundary $fatigueBoundary
      * @return Stamina
      */
-    private function createStaminaToTest(FatigueBoundary $fatigueBoundary)
+    private function createStaminaToTest(FatigueBoundary $fatigueBoundary): Stamina
     {
         $stamina = new Stamina();
         $this->assertRested($stamina, $fatigueBoundary);
@@ -50,19 +49,19 @@ class StaminaTest extends TestWithMockery
     }
 
     /**
-     * @param $value
+     * @param int $value
      * @return \Mockery\MockInterface|FatigueBoundary
      */
-    private function createFatigueBoundary($value)
+    private function createFatigueBoundary(int $value): FatigueBoundary
     {
-        $fatigue = $this->mockery(FatigueBoundary::class);
-        $fatigue->shouldReceive('getValue')
+        $fatigueBoundary = $this->mockery(FatigueBoundary::class);
+        $fatigueBoundary->shouldReceive('getValue')
             ->andReturn($value);
 
-        return $fatigue;
+        return $fatigueBoundary;
     }
 
-    private function assertRested(Stamina $stamina, FatigueBoundary $fatigueBoundary)
+    private function assertRested(Stamina $stamina, FatigueBoundary $fatigueBoundary): void
     {
         self::assertNull($stamina->getId(), 'Not yet persisted stamina should not has filled ID (it is database responsibility in this case)');
         self::assertSame($stamina->getGridOfFatigue()->getFatiguePerRowMaximum($fatigueBoundary), $fatigueBoundary->getValue());
@@ -72,28 +71,27 @@ class StaminaTest extends TestWithMockery
         self::assertTrue($stamina->isConscious($fatigueBoundary));
         self::assertFalse($stamina->needsToRollAgainstMalus());
         self::assertNull($stamina->getReasonToRollAgainstFatigueMalus());
-        self::assertInstanceOf(GridOfFatigue::class, $stamina->getGridOfFatigue());
     }
 
     /**
      * @test
      * @dataProvider provideConsciousAndAlive
      * @param int $fatigueBoundaryValue
-     * @param int $fatigue
+     * @param int $fatigueValue
      * @param bool $isConscious
      * @param bool $isAlive
      */
-    public function I_can_easily_find_out_if_creature_is_conscious_and_alive($fatigueBoundaryValue, $fatigue, $isConscious, $isAlive)
+    public function I_can_easily_find_out_if_creature_is_conscious_and_alive(int $fatigueBoundaryValue, int $fatigueValue, bool $isConscious, bool $isAlive): void
     {
         $fatigueBoundary = $this->createFatigueBoundary($fatigueBoundaryValue);
         $stamina = $this->createStaminaToTest($fatigueBoundary);
-        $stamina->addFatigue($this->createFatigue($fatigue), $fatigueBoundary);
+        $stamina->addFatigue($this->createFatigue($fatigueValue), $fatigueBoundary);
 
         self::assertSame($isConscious, $stamina->isConscious($fatigueBoundary));
         self::assertSame($isAlive, $stamina->isAlive($fatigueBoundary));
     }
 
-    public function provideConsciousAndAlive()
+    public function provideConsciousAndAlive(): array
     {
         return [
             [1, 0, true, true], // fresh
