@@ -11,8 +11,9 @@ class StaminaEnumsRegistrarTest extends TestCase
 {
     /**
      * @test
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function I_can_register_all_enums_at_once()
+    public function I_can_register_all_enums_at_once(): void
     {
         StaminaEnumsRegistrar::registerAll();
 
@@ -48,7 +49,7 @@ class StaminaEnumsRegistrarTest extends TestCase
 
                         return $namespace . '\\' . $classBasename;
                     },
-                    $this->removeCurrentAndParentDir(scandir($dirToScan))
+                    $this->removeCurrentAndParentDir(\scandir($dirToScan, SCANDIR_SORT_NONE))
                 ),
                 function($class) {
                     return is_a($class, Type::class, true);
@@ -57,7 +58,7 @@ class StaminaEnumsRegistrarTest extends TestCase
         }
 
         $enumTypes = [];
-        foreach ($this->removeCurrentAndParentDir(scandir($dirToScan)) as $folder) {
+        foreach ($this->removeCurrentAndParentDir(\scandir($dirToScan, SCANDIR_SORT_NONE)) as $folder) {
             if (is_dir($dirToScan . '/' . $folder)) {
                 foreach ($this->getLocalEnumTypeClasses($dirToScan . DIRECTORY_SEPARATOR . $folder) as $enumType) {
                     $enumTypes[] = $enumType;
