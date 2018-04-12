@@ -2,9 +2,10 @@
 namespace DrdPlus\Stamina;
 
 use Doctrineum\Integer\IntegerEnum;
+use Granam\Integer\PositiveInteger;
 use Granam\Tools\ValueDescriber;
 
-class Fatigue extends IntegerEnum
+class Fatigue extends IntegerEnum implements PositiveInteger
 {
     /**
      * @param int $pointsOfFatigue

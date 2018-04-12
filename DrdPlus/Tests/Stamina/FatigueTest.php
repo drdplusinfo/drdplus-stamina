@@ -3,6 +3,7 @@ namespace DrdPlus\Tests\Stamina;
 
 use DrdPlus\Stamina\Fatigue;
 use Granam\Integer\IntegerInterface;
+use Granam\Integer\PositiveInteger;
 use PHPUnit\Framework\TestCase;
 
 class FatigueTest extends TestCase
@@ -34,6 +35,13 @@ class FatigueTest extends TestCase
      */
     public function I_can_not_use_negative_value(): void
     {
+        try {
+            $fatigue = Fatigue::getIt(0);
+            self::assertInstanceOf(PositiveInteger::class, $fatigue);
+            self::assertSame(0, $fatigue->getValue());
+        } catch (\Exception $exception) {
+            self::fail('No exception expected so far: ' . $exception->getMessage());
+        }
         Fatigue::getEnum(-1);
     }
 }
