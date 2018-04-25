@@ -5,16 +5,18 @@ namespace DrdPlus\Stamina;
 
 use Doctrineum\String\StringEnum;
 use Granam\Scalar\ScalarInterface;
+use Granam\String\StringInterface;
 use Granam\Tools\ValueDescriber;
 
-class ReasonToRollAgainstFatigueMalus extends StringEnum
+class ReasonToRollAgainstMalusFromFatigue extends StringEnum
 {
-    const FATIGUE = 'fatigue';
+    public const FATIGUE = 'fatigue';
+    public const REST = 'rest';
 
     /**
-     * @return ReasonToRollAgainstFatigueMalus|StringEnum
+     * @return ReasonToRollAgainstMalusFromFatigue|StringEnum
      */
-    public static function getFatigueReason(): ReasonToRollAgainstFatigueMalus
+    public static function getFatigueReason(): ReasonToRollAgainstMalusFromFatigue
     {
         return static::getEnum(self::FATIGUE);
     }
@@ -24,12 +26,10 @@ class ReasonToRollAgainstFatigueMalus extends StringEnum
         return $this->getValue() === self::FATIGUE;
     }
 
-    const REST = 'rest';
-
     /**
-     * @return ReasonToRollAgainstFatigueMalus|StringEnum
+     * @return ReasonToRollAgainstMalusFromFatigue|StringEnum
      */
-    public static function getRestReason(): ReasonToRollAgainstFatigueMalus
+    public static function getRestReason(): ReasonToRollAgainstMalusFromFatigue
     {
         return static::getEnum(self::REST);
     }
@@ -40,11 +40,11 @@ class ReasonToRollAgainstFatigueMalus extends StringEnum
     }
 
     /**
-     * @param string $reasonCode
-     * @return ReasonToRollAgainstFatigueMalus|StringEnum
+     * @param string|StringInterface $reasonCode
+     * @return ReasonToRollAgainstMalusFromFatigue|StringEnum
      * @throws \DrdPlus\Stamina\Exceptions\UnknownReasonToRollAgainstMalus
      */
-    public static function getIt($reasonCode): ReasonToRollAgainstFatigueMalus
+    public static function getIt($reasonCode): ReasonToRollAgainstMalusFromFatigue
     {
         return static::getEnum($reasonCode);
     }
