@@ -2,7 +2,7 @@
 namespace DrdPlus\Stamina;
 
 use Doctrineum\Entity\Entity;
-use DrdPlus\DiceRolls\Templates\Rollers\Roller2d6DrdPlus;
+use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Properties\Derived\Endurance;
 use DrdPlus\Properties\Derived\FatigueBoundary;
 use DrdPlus\Properties\Base\Will;
@@ -254,14 +254,14 @@ class Stamina extends StrictObject implements Entity
 
     /**
      * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @param Roll2d6DrdPlus $roll2D6DrdPlus
      * @param FatigueBoundary $fatigueBoundary
      * @return MalusFromFatigue resulted malus
      * @throws \DrdPlus\Stamina\Exceptions\UselessRollAgainstMalus
      */
     public function rollAgainstMalusFromFatigue(
         Will $will,
-        Roller2d6DrdPlus $roller2d6DrdPlus,
+        Roll2d6DrdPlus $roll2D6DrdPlus,
         FatigueBoundary $fatigueBoundary
     ): MalusFromFatigue
     {
@@ -272,8 +272,8 @@ class Stamina extends StrictObject implements Entity
             );
         }
         $malusFromFatigue = $this->reasonToRollAgainstMalusFromFatigue->becauseOfRest()
-            ? $this->rollAgainstMalusOnRest($will, $roller2d6DrdPlus)
-            : $this->rollAgainstMalusOnFatigue($will, $roller2d6DrdPlus);
+            ? $this->rollAgainstMalusOnRest($will, $roll2D6DrdPlus)
+            : $this->rollAgainstMalusOnFatigue($will, $roll2D6DrdPlus);
         $this->reasonToRollAgainstMalusFromFatigue = null;
 
         return $malusFromFatigue;
@@ -281,15 +281,15 @@ class Stamina extends StrictObject implements Entity
 
     /**
      * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @param Roll2d6DrdPlus $roll2d6DrdPlus
      * @return MalusFromFatigue
      */
-    private function rollAgainstMalusOnRest(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus): MalusFromFatigue
+    private function rollAgainstMalusOnRest(Will $will, Roll2d6DrdPlus $roll2d6DrdPlus): MalusFromFatigue
     {
         if ($this->malusFromFatigue->getValue() === 0) {
             return $this->malusFromFatigue; // on rest can be the malus only lowered - there is nothing to lower
         }
-        $newRoll = $this->createRollOnWillAgainstMalus($will, $roller2d6DrdPlus);
+        $newRoll = $this->createRollOnWillAgainstMalus($will, $roll2d6DrdPlus);
         // lesser (or same of course) malus remains; can not be increased on resting
         if ($this->malusFromFatigue->getValue() >= $newRoll->getMalusValue()) { // greater in mathematical meaning (malus is negative)
             return $this->malusFromFatigue; // lesser malus remains
@@ -300,12 +300,12 @@ class Stamina extends StrictObject implements Entity
 
     /**
      * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @param Roll2d6DrdPlus $roll2d6DrdPlus
      * @return RollOnWillAgainstMalus
      */
-    private function createRollOnWillAgainstMalus(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus): RollOnWillAgainstMalus
+    private function createRollOnWillAgainstMalus(Will $will, Roll2d6DrdPlus $roll2d6DrdPlus): RollOnWillAgainstMalus
     {
-        return new RollOnWillAgainstMalus(new RollOnWill($will, $roller2d6DrdPlus->roll()));
+        return new RollOnWillAgainstMalus(new RollOnWill($will, $roll2d6DrdPlus));
     }
 
     /**
@@ -320,15 +320,15 @@ class Stamina extends StrictObject implements Entity
 
     /**
      * @param Will $will
-     * @param Roller2d6DrdPlus $roller2d6DrdPlus
+     * @param Roll2d6DrdPlus $roll2d6DrdPlus
      * @return MalusFromFatigue
      */
-    private function rollAgainstMalusOnFatigue(Will $will, Roller2d6DrdPlus $roller2d6DrdPlus): MalusFromFatigue
+    private function rollAgainstMalusOnFatigue(Will $will, Roll2d6DrdPlus $roll2d6DrdPlus): MalusFromFatigue
     {
         if ($this->malusFromFatigue->getValue() === MalusFromFatigue::MOST) {
             return $this->malusFromFatigue;
         }
-        $newRoll = $this->createRollOnWillAgainstMalus($will, $roller2d6DrdPlus);
+        $newRoll = $this->createRollOnWillAgainstMalus($will, $roll2d6DrdPlus);
         // bigger (or same of course) malus remains; can not be decreased on new fatigue
         if ($this->malusFromFatigue->getValue() <= $newRoll->getMalusValue() // lesser in mathematical meaning (malus is negative)
         ) {
