@@ -98,12 +98,10 @@ class Stamina extends StrictObject implements Entity
      * @param FatigueBoundary $fatigueBoundary
      * @return bool
      */
-    private function maySufferFromFatigue(FatigueBoundary $fatigueBoundary): bool
+    public function maySufferFromFatigue(FatigueBoundary $fatigueBoundary): bool
     {
         // if the being became unconscious than the roll against pain malus is not re-rolled
-        return
-            $this->getGridOfFatigue()->getNumberOfFilledRows($fatigueBoundary) >= GridOfFatigue::PAIN_NUMBER_OF_ROWS
-            && $this->isConscious($fatigueBoundary);
+        return $this->mayHaveMalusFromFatigue($fatigueBoundary) && $this->isConscious($fatigueBoundary);
     }
 
     /**
@@ -222,7 +220,7 @@ class Stamina extends StrictObject implements Entity
     public function getMalusFromFatigue(FatigueBoundary $fatigueBoundary): MalusFromFatigue
     {
         $this->checkIfNeedsToRollAgainstMalusFirst();
-        if ($this->getGridOfFatigue()->getNumberOfFilledRows($fatigueBoundary) === 0) {
+        if (!$this->mayHaveMalusFromFatigue($fatigueBoundary)) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             return MalusFromFatigue::getIt(0);
         }
@@ -234,6 +232,15 @@ class Stamina extends StrictObject implements Entity
          * Even unconscious can has a malus (but would be wrong if applied).
          */
         return $this->malusFromFatigue;
+    }
+
+    /**
+     * @param FatigueBoundary $fatigueBoundary
+     * @return bool
+     */
+    public function mayHaveMalusFromFatigue(FatigueBoundary $fatigueBoundary): bool
+    {
+        return $this->getGridOfFatigue()->getNumberOfFilledRows($fatigueBoundary) >= GridOfFatigue::PAIN_NUMBER_OF_ROWS;
     }
 
     /**
