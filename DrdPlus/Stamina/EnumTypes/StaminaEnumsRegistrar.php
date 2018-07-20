@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace DrdPlus\Stamina\EnumTypes;
 
 use Doctrineum\DateInterval\DBAL\Types\DateIntervalType;

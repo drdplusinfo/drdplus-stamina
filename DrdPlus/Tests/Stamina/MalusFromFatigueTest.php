@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace DrdPlus\Tests\Stamina;
 
 use DrdPlus\Codes\Properties\PropertyCode;

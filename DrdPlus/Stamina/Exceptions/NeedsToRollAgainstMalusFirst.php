@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace DrdPlus\Stamina\Exceptions;
 
 class NeedsToRollAgainstMalusFirst extends \LogicException implements Logic
