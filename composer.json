@@ -1,5 +1,5 @@
 {
-  "name": "drd-plus/stamina",
+  "name": "drdplus/stamina",
   "license": "MIT",
   "type": "project",
   "description": "Remaining stamina of a body according to its endurance and fatigue for Drd+",
@@ -15,9 +15,9 @@
     "doctrineum/integer": "^3.1",
     "doctrineum/string": "^2.1",
     "doctrineum/date-interval": "^3.1",
-    "drd-plus/properties": "^1.0",
-    "drd-plus/tables": "^1.0",
-    "drd-plus/rolls-on": "^1.0"
+    "drdplus/properties": "^1.0",
+    "drdplus/tables": "^1.0",
+    "drdplus/rolls-on": "^1.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
