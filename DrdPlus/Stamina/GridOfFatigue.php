@@ -1,47 +1,41 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Stamina;
 
 use DrdPlus\Properties\Derived\FatigueBoundary;
 use DrdPlus\Calculations\SumAndRound;
+use Granam\Integer\IntegerInterface;
 use Granam\Strict\Object\StrictObject;
 
 class GridOfFatigue extends StrictObject
 {
 
-    const PAIN_NUMBER_OF_ROWS = 1;
-    const UNCONSCIOUS_NUMBER_OF_ROWS = 2;
-    const TOTAL_NUMBER_OF_ROWS = 3;
+    public const PAIN_NUMBER_OF_ROWS = 1;
+    public const UNCONSCIOUS_NUMBER_OF_ROWS = 2;
+    public const TOTAL_NUMBER_OF_ROWS = 3;
 
     /**
      * @var Stamina
      */
     private $stamina;
 
-    /**
-     * @param Stamina $stamina
-     */
     public function __construct(Stamina $stamina)
     {
         $this->stamina = $stamina;
     }
 
-    /**
-     * @param FatigueBoundary $fatigueBoundary
-     * @return int
-     */
-    public function getFatiguePerRowMaximum(FatigueBoundary $fatigueBoundary)
+    public function getFatiguePerRowMaximum(FatigueBoundary $fatigueBoundary): int
     {
         return $fatigueBoundary->getValue();
     }
 
     /**
-     * @param int $fatigueValue
+     * @param int|IntegerInterface $fatigueValue
      * @param FatigueBoundary $fatigueBoundary
      * @return int
      */
-    public function calculateFilledHalfRowsFor($fatigueValue, FatigueBoundary $fatigueBoundary)
+    public function calculateFilledHalfRowsFor($fatigueValue, FatigueBoundary $fatigueBoundary): int
     {
         $fatiguePerRowMaximum = $this->getFatiguePerRowMaximum($fatigueBoundary);
         if ($fatiguePerRowMaximum % 2 === 0) { // odd
@@ -66,11 +60,7 @@ class GridOfFatigue extends StrictObject
             : self::TOTAL_NUMBER_OF_ROWS * 2; // to prevent "more dead than death" value
     }
 
-    /**
-     * @param FatigueBoundary $fatigueBoundary
-     * @return int
-     */
-    public function getNumberOfFilledRows(FatigueBoundary $fatigueBoundary)
+    public function getNumberOfFilledRows(FatigueBoundary $fatigueBoundary): int
     {
         $numberOfFilledRows = SumAndRound::floor($this->stamina->getFatigue()->getValue() / $this->getFatiguePerRowMaximum($fatigueBoundary));
 

@@ -1,9 +1,8 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Tests\Stamina;
 
-use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Properties\Derived\Endurance;
 use DrdPlus\Properties\Derived\FatigueBoundary;
 use DrdPlus\Stamina\Fatigue;
@@ -11,14 +10,14 @@ use DrdPlus\Stamina\MalusFromFatigue;
 use DrdPlus\Stamina\RestPower;
 use DrdPlus\Stamina\Stamina;
 use DrdPlus\Stamina\ReasonToRollAgainstMalusFromFatigue;
-use DrdPlus\Properties\Base\Will;
+use DrdPlus\BaseProperties\Will;
 use DrdPlus\Tables\Measurements\Wounds\Wounds;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use DrdPlus\Tables\Tables;
+use Granam\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use Granam\Tests\Tools\TestWithMockery;
 
-/** @noinspection LongInheritanceChainInspection */
 class StaminaTest extends TestWithMockery
 {
     /**
@@ -37,10 +36,6 @@ class StaminaTest extends TestWithMockery
         self::assertSame(0, $malusFromFatigue->getValue());
     }
 
-    /**
-     * @param FatigueBoundary $fatigueBoundary
-     * @return Stamina
-     */
     private function createStaminaToTest(FatigueBoundary $fatigueBoundary): Stamina
     {
         $stamina = new Stamina();
@@ -64,7 +59,6 @@ class StaminaTest extends TestWithMockery
 
     private function assertRested(Stamina $stamina, FatigueBoundary $fatigueBoundary): void
     {
-        self::assertNull($stamina->getId(), 'Not yet persisted stamina should not has filled ID (it is database responsibility in this case)');
         self::assertSame($stamina->getGridOfFatigue()->getFatiguePerRowMaximum($fatigueBoundary), $fatigueBoundary->getValue());
         self::assertSame($stamina->getGridOfFatigue()->getFatiguePerRowMaximum($fatigueBoundary) * 3, $stamina->getStaminaMaximum($fatigueBoundary));
         self::assertSame($stamina->getGridOfFatigue()->getFatiguePerRowMaximum($fatigueBoundary) * 3, $stamina->getRemainingStaminaAmount($fatigueBoundary));
@@ -95,10 +89,10 @@ class StaminaTest extends TestWithMockery
     public function provideConsciousAndAlive(): array
     {
         return [
-            [1, 0, true, true], // fresh
-            [1, 1, true, true], // tired
-            [1, 2, false, true], // unconscious
-            [1, 3, false, false], // dead
+            'fresh' => [1, 0, true, true],
+            'tired' => [1, 1, true, true],
+            'unconscious' => [1, 2, false, true],
+            'dead' => [1, 3, false, false],
         ];
     }
 
@@ -106,7 +100,7 @@ class StaminaTest extends TestWithMockery
      * @param int $value
      * @return \Mockery\MockInterface|Fatigue
      */
-    private function createFatigue($value)
+    private function createFatigue(int $value)
     {
         $fatigueSize = $this->mockery(Fatigue::class);
         $fatigueSize->shouldReceive('getValue')

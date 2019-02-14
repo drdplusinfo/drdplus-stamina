@@ -1,37 +1,19 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Stamina;
 
 interface PropertyBasedActivity
 {
-    /**
-     * @return bool
-     */
-    public function usesStrength();
+    public function usesStrength(): bool;
 
-    /**
-     * @return bool
-     */
-    public function usesAgility();
+    public function usesAgility(): bool;
 
-    /**
-     * @return bool
-     */
-    public function usesKnack();
+    public function usesKnack(): bool;
 
-    /**
-     * @return bool
-     */
-    public function usesWill();
+    public function usesWill(): bool;
 
-    /**
-     * @return bool
-     */
-    public function usesIntelligence();
+    public function usesIntelligence(): bool;
 
-    /**
-     * @return bool
-     */
-    public function usesCharisma();
+    public function usesCharisma(): bool;
 }

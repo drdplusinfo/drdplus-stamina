@@ -1,10 +1,10 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Stamina;
 
-use Doctrineum\Integer\IntegerEnum;
 use Granam\Integer\PositiveInteger;
+use Granam\IntegerEnum\IntegerEnum;
 use Granam\Tools\ValueDescriber;
 
 class Fatigue extends IntegerEnum implements PositiveInteger
@@ -13,7 +13,7 @@ class Fatigue extends IntegerEnum implements PositiveInteger
      * @param int $pointsOfFatigue
      * @return Fatigue|IntegerEnum
      * @throws \DrdPlus\Stamina\Exceptions\FatigueCanNotBeNegative
-     * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
+     * @throws \Granam\IntegerEnum\Exceptions\WrongValueForIntegerEnum
      */
     public static function getIt($pointsOfFatigue): Fatigue
     {
@@ -24,7 +24,7 @@ class Fatigue extends IntegerEnum implements PositiveInteger
      * @param mixed $enumValue
      * @return int
      * @throws \DrdPlus\Stamina\Exceptions\FatigueCanNotBeNegative
-     * @throws \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
+     * @throws \Granam\IntegerEnum\Exceptions\WrongValueForIntegerEnum
      */
     protected static function convertToEnumFinalValue($enumValue): int
     {
@@ -34,7 +34,6 @@ class Fatigue extends IntegerEnum implements PositiveInteger
                 'Expected at least zero, got ' . ValueDescriber::describe($enumValue)
             );
         }
-
         return $finalValue;
     }
 

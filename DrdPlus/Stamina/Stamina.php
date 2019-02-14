@@ -1,55 +1,40 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Stamina;
 
-use Doctrineum\Entity\Entity;
-use DrdPlus\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use DrdPlus\Properties\Derived\Endurance;
 use DrdPlus\Properties\Derived\FatigueBoundary;
-use DrdPlus\Properties\Base\Will;
+use DrdPlus\BaseProperties\Will;
 use DrdPlus\RollsOn\Traps\RollOnWillAgainstMalus;
 use DrdPlus\RollsOn\Traps\RollOnWill;
 use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Tables;
+use Granam\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
 use Granam\Strict\Object\StrictObject;
 
-/**
- * @Doctrine\ORM\Mapping\Entity
- */
-class Stamina extends StrictObject implements Entity
+class Stamina extends StrictObject
 {
     /**
-     * @Doctrine\ORM\Mapping\Id
-     * @Doctrine\ORM\Mapping\GeneratedValue(strategy="AUTO")
-     * @Doctrine\ORM\Mapping\Column(type="integer")
-     */
-    private $id;
-    /**
      * @var Fatigue
-     * @Doctrine\ORM\Mapping\Column(type="fatigue")
      */
     private $fatigue;
     /**
      * @var MalusFromFatigue
-     * @Doctrine\ORM\Mapping\Column(type="malus_from_fatigue")
      */
     private $malusFromFatigue;
     /**
      * @var ReasonToRollAgainstMalusFromFatigue|null
-     * @Doctrine\ORM\Mapping\Column(type="reason_to_roll_against_fatigue_malus", nullable=true)
      */
     private $reasonToRollAgainstMalusFromFatigue;
     /**
-     * @var GridOfFatigue|null is just a helper, does not need to be persisted
+     * @var GridOfFatigue|null
      */
     private $gridOfFatigue;
 
     public function __construct()
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->fatigue = Fatigue::getIt(0);
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->malusFromFatigue = MalusFromFatigue::getIt(0);
     }
 
@@ -61,8 +46,7 @@ class Stamina extends StrictObject implements Entity
      */
     public function addFatigue(Fatigue $fatigue, FatigueBoundary $fatigueBoundary): Fatigue
     {
-        $this->checkIfNeedsToRollAgainstMalusFirst();
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        $this->guardRollAgainstMalusIsNotNeeded();
         $this->fatigue = Fatigue::getIt($this->fatigue->getValue() + $fatigue->getValue());
         $this->resolveMalusAfterFatigue($this->fatigue->getValue(), $fatigueBoundary);
 
@@ -72,18 +56,14 @@ class Stamina extends StrictObject implements Entity
     /**
      * @throws \DrdPlus\Stamina\Exceptions\NeedsToRollAgainstMalusFirst
      */
-    private function checkIfNeedsToRollAgainstMalusFirst()
+    private function guardRollAgainstMalusIsNotNeeded(): void
     {
         if ($this->needsToRollAgainstMalusFromFatigue()) {
             throw new Exceptions\NeedsToRollAgainstMalusFirst('Need to roll on will against malus caused by fatigue');
         }
     }
 
-    /**
-     * @param int $fatigueAmount
-     * @param FatigueBoundary $fatigueBoundary
-     */
-    private function resolveMalusAfterFatigue($fatigueAmount, FatigueBoundary $fatigueBoundary)
+    private function resolveMalusAfterFatigue(int $fatigueAmount, FatigueBoundary $fatigueBoundary): void
     {
         if ($fatigueAmount === 0) {
             return;
@@ -91,25 +71,16 @@ class Stamina extends StrictObject implements Entity
         if ($this->maySufferFromFatigue($fatigueBoundary)) {
             $this->reasonToRollAgainstMalusFromFatigue = ReasonToRollAgainstMalusFromFatigue::getFatigueReason();
         } elseif ($this->isConscious($fatigueBoundary)) {
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $this->malusFromFatigue = MalusFromFatigue::getIt(0);
         } // otherwise left the previous malus - being will suffer by it when comes conscious again
     }
 
-    /**
-     * @param FatigueBoundary $fatigueBoundary
-     * @return bool
-     */
     public function maySufferFromFatigue(FatigueBoundary $fatigueBoundary): bool
     {
         // if the being became unconscious than the roll against pain malus is not re-rolled
         return $this->mayHaveMalusFromFatigue($fatigueBoundary) && $this->isConscious($fatigueBoundary);
     }
 
-    /**
-     * @param FatigueBoundary $fatigueBoundary
-     * @return bool
-     */
     public function isConscious(FatigueBoundary $fatigueBoundary): bool
     {
         return $this->getGridOfFatigue()->getNumberOfFilledRows($fatigueBoundary) < GridOfFatigue::UNCONSCIOUS_NUMBER_OF_ROWS;
@@ -125,7 +96,7 @@ class Stamina extends StrictObject implements Entity
      */
     public function rest(RestPower $restPower, FatigueBoundary $fatigueBoundary, Endurance $endurance, Tables $tables): int
     {
-        $this->checkIfNeedsToRollAgainstMalusFirst();
+        $this->guardRollAgainstMalusIsNotNeeded();
         $previousFatigue = $this->fatigue->getValue();
         $restUpTo = $tables->getWoundsTable()->toWounds(
             new WoundsBonus($restPower->getValue() + $endurance->getValue(), $tables->getWoundsTable())
@@ -134,7 +105,6 @@ class Stamina extends StrictObject implements Entity
         if ($remainingFatigue < 0) {
             $remainingFatigue = 0;
         }
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->fatigue = Fatigue::getIt($remainingFatigue);
         $restedAmount = $previousFatigue - $this->fatigue->getValue();
         $this->resolveMalusAfterRest($restedAmount, $fatigueBoundary);
@@ -142,11 +112,7 @@ class Stamina extends StrictObject implements Entity
         return $restedAmount;
     }
 
-    /**
-     * @param int $restedAmount
-     * @param FatigueBoundary $fatigueBoundary
-     */
-    private function resolveMalusAfterRest($restedAmount, FatigueBoundary $fatigueBoundary)
+    private function resolveMalusAfterRest(int $restedAmount, FatigueBoundary $fatigueBoundary): void
     {
         if ($restedAmount === 0) { // fatigue remains the same
             return;
@@ -154,61 +120,33 @@ class Stamina extends StrictObject implements Entity
         if ($this->maySufferFromFatigue($fatigueBoundary)) {
             $this->reasonToRollAgainstMalusFromFatigue = ReasonToRollAgainstMalusFromFatigue::getRestReason();
         } elseif ($this->isConscious($fatigueBoundary)) {
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $this->malusFromFatigue = MalusFromFatigue::getIt(0); // pain is gone and being feel it - lets remove the malus
         } // otherwise left the previous malus - being will suffer by it when comes conscious again
     }
 
-    /**
-     * @return Fatigue
-     */
     public function getFatigue(): Fatigue
     {
         return $this->fatigue;
     }
 
-    /**
-     * @param FatigueBoundary $fatigueBoundary
-     * @return int
-     */
     public function getStaminaMaximum(FatigueBoundary $fatigueBoundary): int
     {
         return $fatigueBoundary->getValue() * GridOfFatigue::TOTAL_NUMBER_OF_ROWS;
     }
 
-    /**
-     * @param FatigueBoundary $fatigueBoundary
-     * @return int
-     */
     public function getRemainingStaminaAmount(FatigueBoundary $fatigueBoundary): int
     {
-        return max(0, $this->getStaminaMaximum($fatigueBoundary) - $this->getFatigue()->getValue());
+        return \max(0, $this->getStaminaMaximum($fatigueBoundary) - $this->getFatigue()->getValue());
     }
 
-    /**
-     * @return int|null
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return GridOfFatigue
-     */
     public function getGridOfFatigue(): GridOfFatigue
     {
         if ($this->gridOfFatigue === null) {
             $this->gridOfFatigue = new GridOfFatigue($this);
         }
-
         return $this->gridOfFatigue;
     }
 
-    /**
-     * @param FatigueBoundary $fatigueBoundary
-     * @return bool
-     */
     public function isAlive(FatigueBoundary $fatigueBoundary): bool
     {
         return $this->getRemainingStaminaAmount($fatigueBoundary) > 0;
@@ -221,9 +159,8 @@ class Stamina extends StrictObject implements Entity
      */
     public function getMalusFromFatigue(FatigueBoundary $fatigueBoundary): MalusFromFatigue
     {
-        $this->checkIfNeedsToRollAgainstMalusFirst();
+        $this->guardRollAgainstMalusIsNotNeeded();
         if (!$this->mayHaveMalusFromFatigue($fatigueBoundary)) {
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             return MalusFromFatigue::getIt(0);
         }
 
@@ -236,26 +173,16 @@ class Stamina extends StrictObject implements Entity
         return $this->malusFromFatigue;
     }
 
-    /**
-     * @param FatigueBoundary $fatigueBoundary
-     * @return bool
-     */
     public function mayHaveMalusFromFatigue(FatigueBoundary $fatigueBoundary): bool
     {
         return $this->getGridOfFatigue()->getNumberOfFilledRows($fatigueBoundary) >= GridOfFatigue::PAIN_NUMBER_OF_ROWS;
     }
 
-    /**
-     * @return bool
-     */
     public function needsToRollAgainstMalusFromFatigue(): bool
     {
         return $this->reasonToRollAgainstMalusFromFatigue !== null;
     }
 
-    /**
-     * @return ReasonToRollAgainstMalusFromFatigue|null
-     */
     public function getReasonToRollAgainstMalusFromFatigue(): ?ReasonToRollAgainstMalusFromFatigue
     {
         return $this->reasonToRollAgainstMalusFromFatigue;
@@ -288,11 +215,6 @@ class Stamina extends StrictObject implements Entity
         return $malusFromFatigue;
     }
 
-    /**
-     * @param Will $will
-     * @param Roll2d6DrdPlus $roll2d6DrdPlus
-     * @return MalusFromFatigue
-     */
     private function rollAgainstMalusOnRest(Will $will, Roll2d6DrdPlus $roll2d6DrdPlus): MalusFromFatigue
     {
         if ($this->malusFromFatigue->getValue() === 0) {
@@ -303,35 +225,19 @@ class Stamina extends StrictObject implements Entity
         if ($this->malusFromFatigue->getValue() >= $newRoll->getMalusValue()) { // greater in mathematical meaning (malus is negative)
             return $this->malusFromFatigue; // lesser malus remains
         }
-
         return $this->setMalusFromFatigue($newRoll);
     }
 
-    /**
-     * @param Will $will
-     * @param Roll2d6DrdPlus $roll2d6DrdPlus
-     * @return RollOnWillAgainstMalus
-     */
     private function createRollOnWillAgainstMalus(Will $will, Roll2d6DrdPlus $roll2d6DrdPlus): RollOnWillAgainstMalus
     {
         return new RollOnWillAgainstMalus(new RollOnWill($will, $roll2d6DrdPlus));
     }
 
-    /**
-     * @param RollOnWillAgainstMalus $rollOnWillAgainstMalus
-     * @return MalusFromFatigue
-     */
     private function setMalusFromFatigue(RollOnWillAgainstMalus $rollOnWillAgainstMalus): MalusFromFatigue
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return $this->malusFromFatigue = MalusFromFatigue::getIt($rollOnWillAgainstMalus->getMalusValue());
     }
 
-    /**
-     * @param Will $will
-     * @param Roll2d6DrdPlus $roll2d6DrdPlus
-     * @return MalusFromFatigue
-     */
     private function rollAgainstMalusOnFatigue(Will $will, Roll2d6DrdPlus $roll2d6DrdPlus): MalusFromFatigue
     {
         if ($this->malusFromFatigue->getValue() === MalusFromFatigue::MOST) {
@@ -343,7 +249,6 @@ class Stamina extends StrictObject implements Entity
         ) {
             return $this->malusFromFatigue; // greater malus remains
         }
-
         return $this->setMalusFromFatigue($newRoll);
     }
 }

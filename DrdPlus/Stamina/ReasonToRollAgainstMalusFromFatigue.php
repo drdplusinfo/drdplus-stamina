@@ -1,11 +1,11 @@
 <?php
-declare(strict_types = 1); // on PHP 7+ are standard PHP methods strict to types of given parameters
+declare(strict_types=1);
 
 namespace DrdPlus\Stamina;
 
-use Doctrineum\String\StringEnum;
 use Granam\Scalar\ScalarInterface;
 use Granam\String\StringInterface;
+use Granam\StringEnum\StringEnum;
 use Granam\Tools\ValueDescriber;
 
 class ReasonToRollAgainstMalusFromFatigue extends StringEnum
@@ -53,7 +53,7 @@ class ReasonToRollAgainstMalusFromFatigue extends StringEnum
      * @param bool|float|int|ScalarInterface|string $enumValue
      * @return string
      * @throws \DrdPlus\Stamina\Exceptions\UnknownReasonToRollAgainstMalus
-     * @throws \Doctrineum\String\Exceptions\UnexpectedValueToEnum
+     * @throws \Granam\StringEnum\Exceptions\WrongValueForStringEnum
      */
     protected static function convertToEnumFinalValue($enumValue): string
     {
@@ -63,7 +63,6 @@ class ReasonToRollAgainstMalusFromFatigue extends StringEnum
                 'Expected one of ' . self::FATIGUE . ' or ' . self::REST . ', got ' . ValueDescriber::describe($enumValue)
             );
         }
-
         return $finalValue;
     }
 

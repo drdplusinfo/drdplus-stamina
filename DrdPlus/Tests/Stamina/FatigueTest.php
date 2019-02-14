@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Tests\Stamina;
 
@@ -22,7 +22,7 @@ class FatigueTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Doctrineum\Integer\Exceptions\UnexpectedValueToConvert
+     * @expectedException \Granam\IntegerEnum\Exceptions\WrongValueForIntegerEnum
      * @expectedExceptionMessageRegExp ~Drastic teaching~
      */
     public function I_am_stopped_by_specific_exception_on_invalid_value(): void
