@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\Stamina;
 
@@ -35,11 +34,11 @@ class ReasonToRollAgainstMalusFromFatigueTest extends TestCase
 
     /**
      * @test
-     * @expectedException \DrdPlus\Stamina\Exceptions\UnknownReasonToRollAgainstMalus
-     * @expectedExceptionMessageRegExp ~bored~
      */
     public function I_can_not_create_unknown_reason(): void
     {
+        $this->expectException(\DrdPlus\Stamina\Exceptions\UnknownReasonToRollAgainstMalus::class);
+        $this->expectExceptionMessageMatches('~bored~');
         ReasonToRollAgainstMalusFromFatigue::getEnum('bored');
     }
 }

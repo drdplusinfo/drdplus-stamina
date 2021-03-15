@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\Stamina;
 
@@ -22,28 +21,24 @@ class FatigueTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Granam\IntegerEnum\Exceptions\WrongValueForIntegerEnum
-     * @expectedExceptionMessageRegExp ~Drastic teaching~
      */
     public function I_am_stopped_by_specific_exception_on_invalid_value(): void
     {
+        $this->expectException(\Granam\IntegerEnum\Exceptions\WrongValueForIntegerEnum::class);
+        $this->expectExceptionMessageMatches('~Drastic teaching~');
         Fatigue::getIt('Drastic teaching');
     }
 
     /**
      * @test
-     * @expectedException \DrdPlus\Stamina\Exceptions\FatigueCanNotBeNegative
-     * @expectedExceptionMessageRegExp ~-1~
      */
     public function I_can_not_use_negative_value(): void
     {
-        try {
-            $fatigue = Fatigue::getIt(0);
-            self::assertInstanceOf(PositiveInteger::class, $fatigue);
-            self::assertSame(0, $fatigue->getValue());
-        } catch (\Exception $exception) {
-            self::fail('No exception expected so far: ' . $exception->getMessage());
-        }
+        $fatigue = Fatigue::getIt(0);
+        self::assertInstanceOf(PositiveInteger::class, $fatigue);
+        self::assertSame(0, $fatigue->getValue());
+        $this->expectException(\DrdPlus\Stamina\Exceptions\FatigueCanNotBeNegative::class);
+        $this->expectExceptionMessageMatches('~-1~');
         Fatigue::getEnum(-1);
     }
 }

@@ -1,12 +1,11 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\Stamina;
 
 use DrdPlus\Codes\Properties\PropertyCode;
 use DrdPlus\Stamina\PropertyBasedActivity;
 use DrdPlus\Stamina\MalusFromFatigue;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 class MalusFromFatigueTest extends TestWithMockery
 {
@@ -25,21 +24,21 @@ class MalusFromFatigueTest extends TestWithMockery
 
     /**
      * @test
-     * @expectedException \DrdPlus\Stamina\Exceptions\UnexpectedMalusValue
-     * @expectedExceptionMessageRegExp ~1~
      */
     public function I_can_not_create_positive_malus(): void
     {
+        $this->expectException(\DrdPlus\Stamina\Exceptions\UnexpectedMalusValue::class);
+        $this->expectExceptionMessageMatches('~1~');
         MalusFromFatigue::getIt(1);
     }
 
     /**
      * @test
-     * @expectedException \DrdPlus\Stamina\Exceptions\UnexpectedMalusValue
-     * @expectedExceptionMessageRegExp ~-4~
      */
     public function I_can_not_create_worse_malus_than_minus_three(): void
     {
+        $this->expectException(\DrdPlus\Stamina\Exceptions\UnexpectedMalusValue::class);
+        $this->expectExceptionMessageMatches('~-4~');
         MalusFromFatigue::getIt(-4);
     }
 
@@ -65,7 +64,7 @@ class MalusFromFatigueTest extends TestWithMockery
      * @param string $usedProperty
      * @return \Mockery\MockInterface|PropertyBasedActivity
      */
-    private function createActivity($usedProperty)
+    private function createActivity(string $usedProperty)
     {
         $activity = $this->mockery(PropertyBasedActivity::class);
         $activity->shouldReceive('usesStrength')

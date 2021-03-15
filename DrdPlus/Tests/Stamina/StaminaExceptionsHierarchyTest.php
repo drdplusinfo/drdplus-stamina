@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\Stamina;
 
@@ -14,7 +13,7 @@ class StaminaExceptionsHierarchyTest extends AbstractExceptionsHierarchyTest
 
     protected function getRootNamespace(): string
     {
-        return \str_replace('\Tests', '', __NAMESPACE__);
+        return str_replace('\Tests', '', __NAMESPACE__);
     }
 
 }

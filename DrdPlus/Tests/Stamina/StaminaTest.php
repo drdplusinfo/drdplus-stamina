@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\Stamina;
 
@@ -16,7 +15,7 @@ use DrdPlus\Tables\Measurements\Wounds\WoundsBonus;
 use DrdPlus\Tables\Measurements\Wounds\WoundsTable;
 use DrdPlus\Tables\Tables;
 use Granam\DiceRolls\Templates\Rolls\Roll2d6DrdPlus;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 class StaminaTest extends TestWithMockery
 {
@@ -270,12 +269,12 @@ class StaminaTest extends TestWithMockery
 
     /**
      * @test
-     * @expectedException \DrdPlus\Stamina\Exceptions\UselessRollAgainstMalus
      */
     public function I_can_not_roll_on_malus_from_fatigue_if_not_needed(): void
     {
         $fatigueBoundary = $this->createFatigueBoundary(10);
         $stamina = $this->createStaminaToTest($fatigueBoundary);
+        $this->expectException(\DrdPlus\Stamina\Exceptions\UselessRollAgainstMalus::class);
         $stamina->rollAgainstMalusFromFatigue($this->createWill(), $this->createRoll2d6Plus(), $fatigueBoundary);
     }
 
@@ -283,51 +282,39 @@ class StaminaTest extends TestWithMockery
 
     /**
      * @test
-     * @expectedException \DrdPlus\Stamina\Exceptions\NeedsToRollAgainstMalusFirst
      */
     public function I_can_not_add_new_fatigue_if_roll_on_malus_expected(): void
     {
         $fatigueBoundary = $this->createFatigueBoundary(10);
         $stamina = $this->createStaminaToTest($fatigueBoundary);
-        try {
-            $stamina->addFatigue($this->createFatigue(10), $fatigueBoundary);
-        } catch (\Exception $exception) {
-            self::fail('No exception expected so far: ' . $exception->getTraceAsString());
-        }
+        $stamina->addFatigue($this->createFatigue(10), $fatigueBoundary);
+        $this->expectException(\DrdPlus\Stamina\Exceptions\NeedsToRollAgainstMalusFirst::class);
         $stamina->addFatigue($this->createFatigue(10), $fatigueBoundary);
     }
 
     /**
      * @test
-     * @expectedException \DrdPlus\Stamina\Exceptions\NeedsToRollAgainstMalusFirst
      */
     public function I_can_not_rest_if_roll_on_malus_expected(): void
     {
         $fatigueBoundary = $this->createFatigueBoundary(10);
         $stamina = $this->createStaminaToTest($fatigueBoundary);
-        try {
-            $stamina->addFatigue($this->createFatigue(4), $fatigueBoundary);
-            $stamina->addFatigue($this->createFatigue(4), $fatigueBoundary);
-            $stamina->addFatigue($this->createFatigue(4), $fatigueBoundary);
-        } catch (\Exception $exception) {
-            self::fail('No exception expected so far: ' . $exception->getTraceAsString());
-        }
+        $stamina->addFatigue($this->createFatigue(4), $fatigueBoundary);
+        $stamina->addFatigue($this->createFatigue(4), $fatigueBoundary);
+        $stamina->addFatigue($this->createFatigue(4), $fatigueBoundary);
+        $this->expectException(\DrdPlus\Stamina\Exceptions\NeedsToRollAgainstMalusFirst::class);
         $stamina->rest($this->createRestPower(5), $fatigueBoundary, $this->createEndurance(-2), $this->createTablesWithWoundsTable(3, 0));
     }
 
     /**
      * @test
-     * @expectedException \DrdPlus\Stamina\Exceptions\NeedsToRollAgainstMalusFirst
      */
     public function I_can_not_get_malus_from_fatigue_if_roll_on_it_expected(): void
     {
         $fatigueBoundary = $this->createFatigueBoundary(10);
         $stamina = $this->createStaminaToTest($fatigueBoundary);
-        try {
-            $stamina->addFatigue($this->createFatigue(14), $fatigueBoundary);
-        } catch (\Exception $exception) {
-            self::fail('No exception expected so far: ' . $exception->getTraceAsString());
-        }
+        $stamina->addFatigue($this->createFatigue(14), $fatigueBoundary);
+        $this->expectException(\DrdPlus\Stamina\Exceptions\NeedsToRollAgainstMalusFirst::class);
         $stamina->getMalusFromFatigue($fatigueBoundary);
     }
 
