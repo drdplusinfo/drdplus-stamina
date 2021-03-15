@@ -5,7 +5,12 @@
   "description": "Remaining stamina of a body according to its endurance and fatigue for Drd+",
   "autoload": {
     "psr-4": {
-      "DrdPlus\\": "DrdPlus/"
+      "DrdPlus\\Stamina\\": "Stamina"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DrdPlus\\Tests\\": "tests"
     }
   },
   "require": {
@@ -22,5 +27,8 @@
     "mockery/mockery": "~1.0",
     "granam/exceptions-hierarchy": "~5.0",
     "granam/test-with-mockery": "^2.0"
+  },
+  "config": {
+    "sort-packages": true
   }
 }
